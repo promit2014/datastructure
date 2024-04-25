@@ -1,4 +1,4 @@
-package org.example;
+
 
 import org.recursion.Factorial;
 import org.recursion.HeapRunner;
@@ -11,7 +11,7 @@ import java.util.Objects;
  * Hello world!
  *
  */
-public class App 
+public class Main 
 {
     public static void main( String[] args )
     {
