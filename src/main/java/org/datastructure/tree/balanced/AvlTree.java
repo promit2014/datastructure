@@ -31,14 +31,16 @@ public class AvlTree<T extends Comparable<T>> {
   public Node<T> insert(Node<T> rootNode, Node<T> newNode) {
     if (newNode.data.compareTo(rootNode.data) <= 0 && rootNode.left == null) {
       rootNode.left = newNode;
-      rootNode.height = Math.max(rootNode.left.height, rootNode.height) + 1;
+      rootNode.height = rootNode.left.height < rootNode.height ? rootNode.height : 1;
     } else if (newNode.data.compareTo(rootNode.data) >= 0 && rootNode.right == null) {
       rootNode.right = newNode;
-      rootNode.height = Math.max(rootNode.right.height, rootNode.height) + 1;
+      rootNode.height = rootNode.right.height < rootNode.height ? rootNode.height : 1;
     } else if (newNode.data.compareTo(rootNode.data) <= 0) {
-      insert(rootNode.left, newNode);
+      rootNode.left = insert(rootNode.left, newNode);
+      rootNode.height = Math.max(getheight(rootNode.left), getheight(rootNode)) + 1;
     } else {
-      insert(rootNode.right, newNode);
+      rootNode.right = insert(rootNode.right, newNode);
+      rootNode.height = Math.max(getheight(rootNode.right), getheight(rootNode)) + 1;
     }
 
     return balanceNode(rootNode);
@@ -46,14 +48,14 @@ public class AvlTree<T extends Comparable<T>> {
 
 
   public Node<T> balanceNode(Node<T> rootNode) {
-    if (getHeight(rootNode.left) - getHeight(rootNode.right) > 1) {
-      if(getHeight(rootNode.left.left) > getHeight(rootNode.left.right)){
+    if (getchildTreeHeight(rootNode.left) - getchildTreeHeight(rootNode.right) > 1) {
+      if(getchildTreeHeight(rootNode.left.left) > getchildTreeHeight(rootNode.left.right)){
         return llRotation(rootNode);
       }else{
         return rlRotation(rootNode);
       }
-    }else if (getHeight(rootNode.left) - getHeight(rootNode.right) < -1) {
-      if(getHeight(rootNode.right.right) > getHeight(rootNode.right.left)){
+    }else if (getchildTreeHeight(rootNode.left) - getchildTreeHeight(rootNode.right) < -1) {
+      if(getchildTreeHeight(rootNode.right.right) > getchildTreeHeight(rootNode.right.left)){
         return rrRotation(rootNode);
       }else{
         return lrRotation(rootNode);
@@ -62,7 +64,7 @@ public class AvlTree<T extends Comparable<T>> {
     return rootNode;
   }
 
-  public int getHeight(Node<T> rootNode) {
+  public int getheight(Node<T> rootNode){
     if (rootNode == null) {
       return 0;
     } else {
@@ -70,13 +72,21 @@ public class AvlTree<T extends Comparable<T>> {
     }
   }
 
-  public int calculateHeight(Node<T> rootNode){
-    if(root == null){
+  public int getchildTreeHeight(Node<T> rootNode) {
+    if (rootNode == null) {
       return 0;
-    }else if(root.left == null && root.right == null){
+    } else {
+      return rootNode.height + 1;
+    }
+  }
+
+  public int calculateHeight(Node<T> rootNode){
+    if(rootNode == null){
+      return 0;
+    }else if(rootNode.left == null && rootNode.right == null){
       return 0;
     }else{
-      return Math.max(calculateHeight(rootNode.left), calculateHeight(rootNode.right));
+      return Math.max(calculateHeight(rootNode.left), calculateHeight(rootNode.right)) + 1;
     }
   }
 
@@ -105,12 +115,12 @@ public class AvlTree<T extends Comparable<T>> {
   }
 
   public Node<T> lrRotation(Node<T> rootNode) {
-    rootNode = llRotation(rootNode.left);
+    rootNode.right = llRotation(rootNode.right);
     return rrRotation(rootNode);
   }
 
   public Node<T> rlRotation(Node<T> rootNode) {
-    rootNode = rrRotation(rootNode.right);
+    rootNode.left = rrRotation(rootNode.left);
     return llRotation(rootNode);
   }
 }

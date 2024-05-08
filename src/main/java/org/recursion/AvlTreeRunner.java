@@ -10,6 +10,6 @@ public class AvlTreeRunner {
     avl.insertNode(3);
     avl.insertNode(2);
     avl.insertNode(4);
-    System.out.println("=========================");
+    System.out.println("============AVL TREE=============");
   }
 }
