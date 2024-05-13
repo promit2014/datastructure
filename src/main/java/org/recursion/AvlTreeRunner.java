@@ -11,5 +11,7 @@ public class AvlTreeRunner {
     avl.insertNode(2);
     avl.insertNode(4);
     System.out.println("============AVL TREE=============");
+    System.out.println(avl);
+    System.out.println("Height : "+ avl.getTreeHeight());
   }
 }

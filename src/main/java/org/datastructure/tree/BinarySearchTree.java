@@ -3,7 +3,7 @@ package org.datastructure.tree;
 import java.util.Objects;
 
 public class BinarySearchTree<T extends Comparable<T>> {
-    private Node<T> root;
+    protected Node<T> root;
 
     public BinarySearchTree() {
     }
@@ -12,48 +12,61 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if(Objects.isNull(rootData)){
             throw new UnsupportedOperationException("Creating a tree with NULL Root node is not supported");
         }
-        root = new Node<T>(rootData);
+        root = new Node<>(rootData);
     }
 
-    public static class Node<T> {
-        private T data;
-        private Node<T> leftChild;
-        private Node<T> rightChild;
+    public class Node<S> {
+        public S data;
+        public Node<S> left;
+        public Node<S> right;
+        public int height;
 
-        public Node(T data) {
+        public Node() {
+        this.data = null;
+        this.left = null;
+        this.right = null;
+        this.height = 0;
+        }
+
+        public Node(S data){
             this.data = data;
         }
+
+        @Override
+        public String toString() {
+        return "Node [data=" + data + ", left=" + left + ", right=" + right + ", height=" + height + "]";
+        }
     }
 
-    public void add(T data) {
-        add(root, data);
+    public void insertNode(T data) {
+        insertNode(root, data);
     }
 
-    private void add(Node<T> root, T data) {
+    private void insertNode(Node<T> root, T data) {
         if(Objects.isNull(data)){
             throw new UnsupportedOperationException("adding NULL in tree is not supported");
-        }else if (root.leftChild == null && (root.data.compareTo(data) > 0)) {
-            root.leftChild = new Node<T>(data);;
-        } else if (root.rightChild == null && (root.data.compareTo(data) < 0)) {
-            root.rightChild = new Node<T>(data);
+        }else if (root.left == null && (root.data.compareTo(data) > 0)) {
+            root.left = new Node<>(data);
+        } else if (root.right == null && (root.data.compareTo(data) < 0)) {
+            root.right = new Node<>(data);
         } else {
-            add(root.data.compareTo(data) >0 ? root.leftChild : root.rightChild, data);
+            insertNode(root.data.compareTo(data) >0 ? root.left : root.right, data);
         }
     }
 
-    public Long getTreeHeight() {
-        return getTreeHeight(root);
+    public int getTreeHeight() {
+        return calculateHeight(root);
     }
 
-    public Long getTreeHeight(BinarySearchTree.Node root) {
-        if (root == null) {
-            return 0l;
+    protected int calculateHeight(Node<T> rootNode){
+        if(rootNode == null){
+          return 0;
+        }else if(rootNode.left == null && rootNode.right == null){
+          return 0;
+        }else{
+          return Math.max(calculateHeight(rootNode.left), calculateHeight(rootNode.right)) + 1;
         }
-        Long leftHeight = getTreeHeight(root.leftChild);
-        Long rightHeight = getTreeHeight(root.rightChild);
-
-        return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
-    }
+      }
 
     public void deleteNode(T data){
 

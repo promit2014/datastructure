@@ -144,7 +144,7 @@ public class Heap<T extends Comparable<T>> {
    *
    */
   public void heapify() {
-    if (list.size() <= 0) {
+    if (list.isEmpty()) {
       throw new UnsupportedOperationException("Tree size should be more than 1 element for heapifying");
     }
     heapify(list.size() - 1);

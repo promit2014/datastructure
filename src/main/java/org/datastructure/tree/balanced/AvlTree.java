@@ -1,23 +1,10 @@
 package org.datastructure.tree.balanced;
 
-public class AvlTree<T extends Comparable<T>> {
+import org.datastructure.tree.BinarySearchTree;
 
-  Node<T> root;
+public class AvlTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 
-  private class Node<T> {
-    T data;
-    Node<T> left;
-    Node<T> right;
-    int height;
-
-    public Node() {
-      this.data = null;
-      this.left = null;
-      this.right = null;
-      this.height = 0;
-    }
-  }
-
+  @Override
   public void insertNode(T data) {
     Node<T> newNode = new Node<>();
     newNode.data = data;
@@ -28,7 +15,7 @@ public class AvlTree<T extends Comparable<T>> {
     }
   }
 
-  public Node<T> insert(Node<T> rootNode, Node<T> newNode) {
+  private Node<T> insert(Node<T> rootNode, Node<T> newNode) {
     if (newNode.data.compareTo(rootNode.data) <= 0 && rootNode.left == null) {
       rootNode.left = newNode;
       rootNode.height = rootNode.left.height < rootNode.height ? rootNode.height : 1;
@@ -46,8 +33,7 @@ public class AvlTree<T extends Comparable<T>> {
     return balanceNode(rootNode);
   }
 
-
-  public Node<T> balanceNode(Node<T> rootNode) {
+  private Node<T> balanceNode(Node<T> rootNode) {
     if (getchildTreeHeight(rootNode.left) - getchildTreeHeight(rootNode.right) > 1) {
       if(getchildTreeHeight(rootNode.left.left) > getchildTreeHeight(rootNode.left.right)){
         return llRotation(rootNode);
@@ -64,7 +50,7 @@ public class AvlTree<T extends Comparable<T>> {
     return rootNode;
   }
 
-  public int getheight(Node<T> rootNode){
+  private int getheight(Node<T> rootNode){
     if (rootNode == null) {
       return 0;
     } else {
@@ -72,25 +58,15 @@ public class AvlTree<T extends Comparable<T>> {
     }
   }
 
-  public int getchildTreeHeight(Node<T> rootNode) {
+  private int getchildTreeHeight(Node<T> rootNode) {
     if (rootNode == null) {
       return 0;
     } else {
       return rootNode.height + 1;
     }
   }
-
-  public int calculateHeight(Node<T> rootNode){
-    if(rootNode == null){
-      return 0;
-    }else if(rootNode.left == null && rootNode.right == null){
-      return 0;
-    }else{
-      return Math.max(calculateHeight(rootNode.left), calculateHeight(rootNode.right)) + 1;
-    }
-  }
-
-  public Node<T> llRotation(Node<T> rootNode) {
+  
+  private Node<T> llRotation(Node<T> rootNode) {
     Node<T> leftNode = rootNode.left;
     Node<T> grandChild = leftNode.right;
     leftNode.right = rootNode;
@@ -102,7 +78,7 @@ public class AvlTree<T extends Comparable<T>> {
     return leftNode;
   }
 
-  public Node<T> rrRotation(Node<T> rootNode) {
+  private Node<T> rrRotation(Node<T> rootNode) {
     Node<T> rightNode = rootNode.right;
     Node<T> grandChild = rightNode.left;
     rightNode.left = rootNode;
@@ -114,13 +90,19 @@ public class AvlTree<T extends Comparable<T>> {
     return rightNode;
   }
 
-  public Node<T> lrRotation(Node<T> rootNode) {
+  private Node<T> lrRotation(Node<T> rootNode) {
     rootNode.right = llRotation(rootNode.right);
     return rrRotation(rootNode);
   }
 
-  public Node<T> rlRotation(Node<T> rootNode) {
+  private Node<T> rlRotation(Node<T> rootNode) {
     rootNode.left = rrRotation(rootNode.left);
     return llRotation(rootNode);
   }
+
+  @Override
+  public String toString() {
+    return "AvlTree [root=" + root + "]";
+  }
+
 }
